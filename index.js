@@ -9,7 +9,7 @@ const fs = require("fs")
 app.set("view engine", "ejs");
 
 app.use(express.static('public'));
-const port = 80;
+const port = 3000;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp') 
