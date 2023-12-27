@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .custom-file-input {
+      cursor: pointer;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card mt-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Result</h5>
+            <p class="card-description text-center">Are you satisfied with the result?<br>If yes, Thank you :)</p>
+            <img src="<%= result %>" class="img-fluid">
+            <br><br>
+            <button class="btn btn-danger" id="btns">
+              Download
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center justify-content-center" style="padding-top: 10px;">
+    <code>Server Hosted With 💖 By aisbircube</code>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    document.getElementById('btns').addEventListener('click', async function() {
+      var resultUrl = '<%= result %>';
+      var link = document.createElement('a');
+
+      // Fetch the image as a blob
+      var response = await fetch(resultUrl);
+      var blob = await response.blob();
+
+      // Convert blob to JPEG using canvas
+      var img = document.createElement('img');
+      var objectURL = URL.createObjectURL(blob);
+      img.src = objectURL;
+
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Export canvas as a JPEG blob
+        canvas.toBlob(function(jpegBlob) {
+          // Set up download link
+          link.href = URL.createObjectURL(jpegBlob);
+          link.download = 'result.jpg';
+
+          // Append the link to the document
+          document.body.appendChild(link);
+
+          // Trigger a click on the link to initiate the download
+          link.click();
+
+          // Remove the link from the document
+          document.body.removeChild(link);
+        }, 'image/jpeg', 1); // Quality set to 1 (max quality)
+      };
+    });
+  </script>
+</body>
+</html>
